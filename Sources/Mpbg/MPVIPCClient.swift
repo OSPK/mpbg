@@ -3,9 +3,11 @@ import Darwin
 
 enum MPVIPCClient {
     static func configureAndLoad(socketPath: String, video: VideoItem) -> Bool {
-        var commands = propertyCommands(for: video)
-        commands.append(["command": ["set_property", "screen", video.screen]])
-        commands.append(["command": ["loadfile", video.path, "replace"]])
+        var commands: [[String: Any]] = [
+            ["command": ["set_property", "screen", video.screen]],
+            ["command": ["loadfile", video.path, "replace"]]
+        ]
+        commands.append(contentsOf: propertyCommands(for: video))
         return send(socketPath: socketPath, commands: commands)
     }
 

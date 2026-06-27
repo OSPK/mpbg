@@ -38,9 +38,25 @@ import Testing
     #expect(MPVIPCClient.configureFlip(socketPath: socketURL.path, flipHorizontally: true))
     #expect(MPVIPCClient.configureMaximize(socketPath: socketURL.path, maximize: true))
     #expect(MPVIPCClient.configureVolume(socketPath: socketURL.path, volume: 60))
+
+    if let sampleURL = sampleVideoURL() {
+        let item = VideoItem(path: sampleURL.path, screen: 0, speed: 1, loop: true, flipHorizontally: false, volume: 0, maximize: false)
+        #expect(MPVIPCClient.configureAndLoad(socketPath: socketURL.path, video: item))
+    }
 }
 
 private func createFile(_ url: URL) -> URL {
     FileManager.default.createFile(atPath: url.path, contents: nil)
     return url
+}
+
+private func sampleVideoURL() -> URL? {
+    let candidates = [
+        "/Users/waqas/web/Percy Jackson： Sea Of Monsters ｜ Official Trailer #2 HD ｜ 2013 [xg3znoE9m7I].mkv",
+        "/Users/waqas/web/Tremors Official Trailer #1 - (1990) HD [liJfZvXdiTE].webm"
+    ]
+
+    return candidates
+        .map(URL.init(fileURLWithPath:))
+        .first { FileManager.default.fileExists(atPath: $0.path) }
 }
